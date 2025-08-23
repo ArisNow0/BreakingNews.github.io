@@ -26,8 +26,8 @@
                             <option>UA</option>
                         </select>
                     </div>
-                    <div class="weather" id="gorod">Киев, +20°C</div>
-                    <div class="currency">USD 36.85 | EUR 39.90</div>
+                    <div class="weather" id="gorod">Киев, +99°C</div>
+                    <div class="currency" id="valute">USD 00.00 | EUR 00.00</div>
                 </div>
             </div>
         </div>
@@ -40,23 +40,20 @@
             <div class="filter-block">
                 <div class="filter-title">Источники новостей</div>
                 <ul class="sources-list">
-                    <li><label><input type="checkbox"> Все источники</label></li>
-                    <li><label><input type="checkbox" checked> Только избранные</label></li>
-                    <li><label><input type="checkbox"> BBC News</label></li>
-                    <li><label><input type="checkbox"> Reuters</label></li>
-                    <li><label><input type="checkbox"> Associated Press</label></li>
-                    <li><label><input type="checkbox"> The New York Times</label></li>
-                    <li><label><input type="checkbox"> The Guardian</label></li>
+                    <li><label><input type="checkbox" checked> Все источники</label></li>
+                    <li><label><input type="checkbox"> Discord</label></li>
+                    <li><label><input type="checkbox"> Ukraine News</label></li>
+                    <li><label><input type="checkbox"> Новости Мира</label></li>
                 </ul>
             </div>
             <div class="filter-block">
                 <div class="filter-title">Темы</div>
                 <div class="chip-list">
-                    <span class="chip">Мобилизация</span>
+                    <span class="chip">Сервер</span>
                     <span class="chip">Дроны</span>
                     <span class="chip">Энергетика</span>
                     <span class="chip">Кибератаки</span>
-                    <span class="chip">Выборы</span>
+                    <span class="chip">Реклама</span>
                     <span class="chip">Инфляция</span>
                     <span class="chip">Криптовалюты</span>
                 </div>
@@ -70,41 +67,32 @@
 
         <!-- Центральная колонка -->
         <section class="center-column">
-            <div class="main-news">
+            <div class="main-news" id="news-new-list">
                 <h2 class="section-title">Главное сейчас</h2>
                 <ul class="news-list">
-                    <li class="news-item">
-                        <div class="news-content">
-                            <div class="news-meta">
-                                <span class="news-time">10:25</span>
-                                <span class="news-source">Reuters</span>
-                            </div>
-                            <h3 class="news-title">Центробанк объявил о новом изменении ключевой ставки</h3>
-                        </div>
-                        <div class="news-image">
-                            <img src="data:image/svg+xml;base64,..." alt="Новость">
-                        </div>
-                    </li>
-                    <!-- ... другие новости ... -->
+                      <li class="news-item">
+        <div class="news-content">
+            <div class="news-meta">
+                <span class="news-time">09:15</span>
+                <span class="news-source">Ukraine News</span>
+                <span class="news-category">Спорт</span>
+            </div>
+            <h3 class="news-title">Футбол: сборная Украины одержала победу</h3>
+            <div class="news-fulltext">
+                Сегодня сборная Украины по футболу выиграла важный матч против команды соперника со счетом 2:1. В ходе игры были забиты впечатляющие голы, а игроки проявили высокую командную работу. Этот успех укрепляет позиции Украины в международном рейтинге.
+            </div>
+        </div>
+        <div class="news-image">
+            <img src="https://media.discordapp.net/attachments/928369782024208454/1408871195880718458/kim_chan_in.png?ex=68ab510c&is=68a9ff8c&hm=65ce4da8e78d4b10f234708cecc76f6b9b458160f296fdd00755dfc6a62bd790&=&format=webp&quality=lossless&width=1489&height=838" alt="Новость">
+        </div>
+    </li>
                 </ul>
             </div>
             <div class="main-news">
                 <h2 class="section-title">Последние новости</h2>
-                <ul class="news-list">
-                    <li class="news-item">
-                        <div class="news-content">
-                            <div class="news-meta">
-                                <span class="news-time">09:15</span>
-                                <span class="news-source">BBC News</span>
-                                <span class="news-category">Спорт</span>
-                            </div>
-                            <h3 class="news-title">Футбол: сборная Украины одержала победу...</h3>
-                        </div>
-                        <div class="news-image">
-                            <img src="data:image/svg+xml;base64,..." alt="Новость">
-                        </div>
-                    </li>
-                    <!-- ... -->
+                <ul class="news-list" id="news-list"> 
+
+
                 </ul>
                 <div class="ad-block">
                     <img src="data:image/svg+xml;base64,..." alt="Реклама">
@@ -125,16 +113,16 @@
             <div class="widget">
                 <h3 class="widget-title">Погода</h3>
                 <ul class="weather-info">
-                    <li>Киев: +18°C</li>
-                    <li>Львов: +16°C</li>
-                    <li>Одесса: +20°C</li>
+                    <li id="Kiev">Киев: +99°C</li>
+                    <li id="Lvov">Львов: +99°C</li>
+                    <li id="Odessa">Одесса: +99°C</li>
                 </ul>
             </div>
             <div class="widget">
                 <h3 class="widget-title">Курсы валют</h3>
                 <ul class="currency-info">
-                    <li>USD: 36.85 ₴</li>
-                    <li>EUR: 39.90 ₴</li>
+                    <li id="USDv">USD: 00.00 ₴</li>
+                    <li id="EURv">EUR: 00.00 ₴</li>
                 </ul>
             </div>
         </aside>
@@ -167,6 +155,12 @@
         </div>
     </footer>
 
+<div class="modal" id="imageModal">
+    <img src="" alt="Увеличенное фото">
+</div>
+
+    <script src="news.js" type="module"></script>
     <script src="script.js"></script>
+    
 </body>
 </html>
