@@ -304,7 +304,18 @@ img {
     margin: 20px 0;
     text-align: center;
 }
+  .ad-block {
+    width: 100%;
+    overflow: hidden;
+  }
 
+  .ad-block img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: opacity 0.5s ease-in-out;
+    opacity: 1;
+  }
 /* Правая колонка */
 .right-column {
     flex: 0 0 300px;

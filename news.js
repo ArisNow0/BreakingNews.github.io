@@ -9,6 +9,7 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 let newsData = [];
 let adData = [];
+let ads = [];
 
 async function fetchData() {
     try {
@@ -29,8 +30,18 @@ async function fetchData() {
         console.log('newsData:', newsData);
         console.log('adData:', adData);
 
-        // рендерим новости после загрузки данных
+        // если adData имеет вложенный массив -> "расплющим"
+        if (Array.isArray(adData[0])) {
+            ads = adData[0];
+        } else {
+            ads = adData;
+        }
+
+        // рендерим новости
         renderNews();
+
+        // запускаем рекламу (только теперь!)
+        initAds();
 
     } catch (err) {
         console.error('Unexpected error:', err);
@@ -76,3 +87,34 @@ function renderNews() {
 }
 
 document.addEventListener('DOMContentLoaded', renderNews);
+
+
+function initAds() {
+    if (!ads || ads.length === 0) return;
+
+    const adImage = document.getElementById("ad-image");
+    const adLink = document.getElementById("ad-link");
+
+    // генерируем случайный стартовый индекс
+    let currentIndex = Math.floor(Math.random() * ads.length);
+
+    function changeAd() {
+        const ad = ads[currentIndex];
+        if (!ad) return;
+
+        adImage.style.opacity = 0;
+
+        setTimeout(() => {
+            adImage.src = ad.image;
+            adLink.href = ad.url;
+            adImage.style.opacity = 1;
+        }, 500);
+
+        // переключаем по кругу
+        currentIndex = (currentIndex + 1) % ads.length;
+    }
+
+    changeAd(); // первая загрузка
+    setInterval(changeAd, 600000); // каждые 10 минут
+}
+initAds();
