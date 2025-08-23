@@ -1,0 +1,398 @@
+/* Общие стили */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
+}
+
+body {
+    background-color: #f5f5f5;
+    color: #333;
+    line-height: 1.6;
+}
+
+a {
+    text-decoration: none;
+    color: #0066cc;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+img {
+    max-width: 100%;
+}
+.container.main-content {
+  width: 1200px; /* или любой размер, который тебе нужен */
+  margin: 30px auto; /* центрирование */
+}
+
+.container {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+/* Шапка */
+.header {
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 0;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    font-size: 24px;
+    font-weight: bold;
+    color: #0066cc;
+}
+
+.logo img {
+    margin-right: 10px;
+    height: 40px;
+}
+
+.search {
+    flex: 0 0 40%;
+    position: relative;
+}
+
+.search input {
+    width: 100%;
+    padding: 10px 15px;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    font-size: 14px;
+}
+
+.search button {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.header-widgets {
+    display: flex;
+    align-items: center;
+}
+
+.language-switcher,
+.weather,
+.currency,
+.login {
+    margin-left: 20px;
+    font-size: 14px;
+}
+
+.login-button {
+    background-color: #0066cc;
+    color: white;
+    padding: 8px 15px;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+}
+
+/* Навигация */
+.navigation {
+    background-color: #0066cc;
+    padding: 10px 0;
+}
+
+.nav-menu {
+    display: flex;
+    list-style: none;
+    justify-content: space-between;
+}
+
+.nav-menu li a {
+    color: white;
+    padding: 5px 10px;
+    font-size: 14px;
+}
+
+/* Основная область */
+.main-content {
+    display: flex;
+    margin: 20px 0;
+    gap: 20px;
+}
+
+/* Левая колонка */
+.left-column {
+    flex: 0 0 250px;
+}
+
+.filter-block {
+    background-color: #fff;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.filter-title {
+    font-weight: bold;
+    margin-bottom: 10px;
+    font-size: 16px;
+}
+
+.sources-list {
+    list-style: none;
+}
+
+.sources-list li {
+    margin-bottom: 8px;
+}
+
+.chip-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.chip {
+    background-color: #eef5ff;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    color: #0066cc;
+}
+
+.checkbox-option {
+    margin-top: 15px;
+}
+
+/* Центральная колонка */
+.center-column {
+    flex: 1;
+}
+
+.main-news {
+    background-color: #fff;
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.section-title {
+    font-size: 20px;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+.news-list {
+    list-style: none;
+}
+
+.news-item {
+    padding: 15px 0;
+    border-bottom: 1px solid #eee;
+    display: flex;
+}
+
+.news-item:last-child {
+    border-bottom: none;
+}
+
+.news-content {
+    flex: 1;
+}
+
+.news-meta {
+    display: flex;
+    font-size: 12px;
+    color: #777;
+    margin-bottom: 5px;
+}
+
+.news-source,
+.news-time {
+    margin-right: 10px;
+}
+
+.news-category {
+    color: #0066cc;
+}
+
+.news-title {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.news-image {
+    flex: 0 0 120px;
+    margin-left: 15px;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.load-more {
+    background-color: #f0f0f0;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.ad-block {
+    margin: 20px 0;
+    text-align: center;
+}
+
+/* Правая колонка */
+.right-column {
+    flex: 0 0 300px;
+    position: sticky;
+    top: 130px;
+    align-self: flex-start;
+}
+
+.widget {
+    background-color: #fff;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.widget-title {
+    font-weight: bold;
+    margin-bottom: 10px;
+    font-size: 16px;
+    color: #0066cc;
+}
+
+.widget-content {
+    font-size: 14px;
+}
+
+.weather-info,
+.currency-info,
+.tv-program,
+.latest-news {
+    list-style: none;
+}
+
+.weather-info li,
+.currency-info li,
+.tv-program li,
+.latest-news li {
+    padding: 8px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.weather-info li:last-child,
+.currency-info li:last-child,
+.tv-program li:last-child,
+.latest-news li:last-child {
+    border-bottom: none;
+}
+
+/* Футер */
+.footer {
+    background-color: #1a1a1a;
+    color: #fff;
+    padding: 40px 0 20px;
+    margin-top: 40px;
+}
+
+.footer-content {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 30px;
+}
+
+.footer-section {
+    flex: 1;
+    padding: 0 15px;
+}
+
+.footer-title {
+    font-size: 18px;
+    margin-bottom: 15px;
+    color: #fff;
+}
+
+.footer-links {
+    list-style: none;
+}
+
+.footer-links li {
+    margin-bottom: 10px;
+}
+
+.footer-links a {
+    color: #ccc;
+}
+
+.footer-links a:hover {
+    color: #fff;
+}
+
+.social-links {
+    display: flex;
+    gap: 10px;
+}
+
+.social-icon {
+    width: 36px;
+    height: 36px;
+    background-color: #333;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+}
+
+.partners {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    align-items: center;
+}
+
+.partner-logo {
+    height: 30px;
+    opacity: 0.7;
+    transition: opacity 0.3s;
+}
+
+.partner-logo:hover {
+    opacity: 1;
+}
+
+.footer-bottom {
+    text-align: center;
+    padding-top: 20px;
+    border-top: 1px solid #333;
+    font-size: 12px;
+    color: #999;
+}
