@@ -10,7 +10,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }));
     });
 
-    // Lazy loading изображений
     if ('IntersectionObserver' in window) {
         const lazyImages = document.querySelectorAll('.news-image img');
 
@@ -138,16 +137,84 @@ newsList.addEventListener('click', e => {
     const item = e.target.closest('.news-item');
     if (!item) return;
 
-    if (e.target.tagName === 'IMG') {
-        // Увеличение фото
-        e.stopPropagation();
-        const modal = document.getElementById('imageModal');
-        modal.querySelector('img').src = e.target.src;
-        modal.classList.add('show');
-    } else {
-        // Раскрытие текста
-        if (!e.target.closest('.news-image')) {
-            item.classList.toggle('open');
-        }
+    // Клик только по текстовой части
+    if (!e.target.closest('.news-image')) {
+        item.classList.toggle('open');
     }
+});
+const newsNewList = document.getElementById('news-new-list');
+
+newsNewList.addEventListener('click', e => {
+    const item = e.target.closest('.news-item');
+    if (!item) return;
+
+    // Клик только по текстовой части
+    if (!e.target.closest('.news-image')) {
+        item.classList.toggle('open');
+    }
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+
+    const chips = document.querySelectorAll('.chip');
+    const sourceChips = document.querySelectorAll('.source-chip');
+
+    // Объединяем обработку кликов для всех фильтров
+    function setupChips(list, isSource=false) {
+        list.forEach(chip => {
+            chip.addEventListener('click', () => {
+                if (isSource && chip.textContent === "Все источники") {
+                    // Деактивируем все остальные
+                    list.forEach(c => c.classList.remove('active'));
+                    chip.classList.add('active');
+                } else if (isSource) {
+                    chip.classList.toggle('active');
+                    // Снимаем "Все источники", если выбран хотя бы один
+                    const allChip = Array.from(list).find(c => c.textContent === "Все источники");
+                    if (allChip) allChip.classList.remove('active');
+                } else {
+                    // Для темы просто переключаем активность
+                    chip.classList.toggle('active');
+                }
+                applyFilter();
+            });
+        });
+    }
+
+    setupChips(chips);
+    setupChips(sourceChips, true);
+
+    function applyFilter() {
+        const activeCategories = Array.from(document.querySelectorAll('.chip.active'))
+            .map(c => c.textContent.trim().toLowerCase());
+        const activeSources = Array.from(document.querySelectorAll('.source-chip.active'))
+            .map(c => c.textContent.trim());
+
+        const items = document.querySelectorAll('.news-item');
+        items.forEach(item => {
+            const catEl = item.querySelector('.news-category');
+            const srcEl = item.querySelector('.news-source');
+
+            const itemCat = catEl ? catEl.textContent.trim().toLowerCase() : '';
+            const itemSrc = srcEl ? srcEl.textContent.trim() : '';
+
+            const categoryMatch = activeCategories.length === 0 || activeCategories.includes(itemCat);
+            const sourceMatch = activeSources.includes("Все источники") || activeSources.includes(itemSrc);
+
+            if (categoryMatch && sourceMatch) {
+                item.classList.remove('hidden');
+            } else {
+                item.classList.add('hidden');
+            }
+        });
+    }
+
+    // Поддержка динамически добавляемых новостей
+    const newsList = document.querySelector('.news-list');
+    if (newsList) {
+        const observer = new MutationObserver(() => applyFilter());
+        observer.observe(newsList, { childList: true });
+    }
+
+    applyFilter(); // первый запуск
 });

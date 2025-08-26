@@ -30,17 +30,15 @@ async function fetchData() {
         console.log('newsData:', newsData);
         console.log('adData:', adData);
 
-        // если adData имеет вложенный массив -> "расплющим"
         if (Array.isArray(adData[0])) {
             ads = adData[0];
         } else {
             ads = adData;
         }
 
-        // рендерим новости
         renderNews();
 
-        // запускаем рекламу (только теперь!)
+
         initAds();
 
     } catch (err) {
@@ -48,46 +46,214 @@ async function fetchData() {
     }
 }
 
-// просто вызываем fetchData, renderNews будет вызвана внутри
+
 fetchData();
 
   
+const modal = document.getElementById('image-modal');
+const modalImg = document.getElementById('modal-image');
+const modalOverlay = modal.querySelector('.image-modal__overlay');
+const modalCloseBtn = modal.querySelector('.image-modal__close');
+
+function openModal(src, alt = '') {
+  modalImg.src = src;
+  modalImg.alt = alt || 'Увеличенное изображение';
+  modal.classList.add('is-open');
+  document.body.style.overflow = 'hidden'; 
+}
+
+function closeModal() {
+  modal.classList.remove('is-open');
+  modalImg.src = '';
+  document.body.style.overflow = '';
+}
+
+modalOverlay.addEventListener('click', closeModal);
+modalCloseBtn.addEventListener('click', closeModal);
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') closeModal();
+});
+
+let visibleCount = 0; // Сколько новостей уже показано
+const step = 5;       // Сколько новостей показывать за раз
+let currentQuery = ''; // Текущий поисковый запрос
+
+// --- Вспомогательные: парсер даты и сортировка/фильтрация ---
+function parseDateFromString(str) {
+  if (!str) return new Date(0);
+  const [time, date] = str.split(' ');
+  const [hours, minutes] = (time || '00:00').split(':').map(Number);
+  const [day, month, year] = (date || '01.01.1970').split('.').map(Number);
+  return new Date(year, month - 1, day, hours, minutes);
+}
+
+function getFilteredSortedNews() {
+  const q = currentQuery.trim().toLowerCase();
+  // фильтруем по полям (если q пустой — фильтр пропускает всё)
+  const filtered = newsData.filter(item => {
+    if (!q) return true;
+    const hay = (
+      (item.title || '') + ' ' +
+      (item.fulltext || '') + ' ' +
+      (item.source || '') + ' ' +
+      (item.category || '')
+    ).toLowerCase();
+    return hay.includes(q);
+  });
+
+  // сортируем по дате (новее сверху)
+  return filtered.slice().sort((a, b) => parseDateFromString(b.time) - parseDateFromString(a.time));
+}
+
+// --- Создание DOM-элемента новости (как раньше) ---
+function createNewsItem(item) {
+  const li = document.createElement('li');
+  li.className = 'news-item';
+
+  li.innerHTML = `
+    <div class="news-content">
+      <div class="news-meta">
+        <span class="news-time">${item.time || ''}</span>
+        <span class="news-source">${item.source || ''}</span>
+        <span class="news-category">${item.category || ''}</span>
+      </div>
+      <h3 class="news-title">${item.title || ''}</h3>
+      <div class="news-fulltext">${item.fulltext || ''}</div>
+    </div>
+    ${item.image ? `
+      <div class="news-image">
+        <img src="${item.image}" alt="Новость" style="cursor: zoom-in;">
+      </div>` : ''}
+  `;
+
+  const img = li.querySelector('img');
+  if (img) img.addEventListener('click', () => openModal(item.image, item.title));
+
+  return li;
+}
+
+// --- Анимация появления (как у тебя) ---
+function animateShow(li) {
+  li.style.overflow = 'hidden';
+  li.style.maxHeight = '0px';
+  li.style.opacity = '0';
+  // следующий кадр — анимируем до scrollHeight
+  requestAnimationFrame(() => {
+    const target = li.scrollHeight;
+    li.style.transition = 'max-height 0.5s ease, opacity 0.45s ease, padding 0.45s ease';
+    li.style.maxHeight = target + 'px';
+    li.style.opacity = '1';
+  });
+
+  function onTransitionEnd(e) {
+    if (e.propertyName === 'max-height') {
+      li.style.maxHeight = '';
+      li.style.overflow = '';
+      li.style.transition = '';
+      li.removeEventListener('transitionend', onTransitionEnd);
+    }
+  }
+  li.addEventListener('transitionend', onTransitionEnd);
+}
+
+// --- Основная функция рендера (с учётом поиска) ---
 function renderNews() {
-    const newsList = document.getElementById('news-list');
-    newsList.innerHTML = ''; // очищаем список перед рендером
+  const newsList = document.getElementById('news-list');
+  const newsNewList = document.getElementById('news-new-list');
+  const loadMoreBtn = document.getElementById('load-more');
 
-    newsData.forEach(item => {
-        const li = document.createElement('li');
-        li.className = 'news-item';
+  const sortedNews = getFilteredSortedNews();
 
-        // используем шаблон с проверкой наличия данных
-        li.innerHTML = `
-        <div class="news-content">
-            <div class="news-meta">
-                <span class="news-time">${item.time || ''}</span>
-                <span class="news-source">${item.source || ''}</span>
-                <span class="news-category">${item.category || ''}</span>
-            </div>
-            <h3 class="news-title">${item.title || ''}</h3>
-            <div class="news-fulltext">${item.fulltext || ''}</div>
-        </div>
-        ${item.image ? `<div class="news-image">
-            <img src="${item.image}" alt="Новость" style="cursor:pointer;">
-        </div>` : ''}
-        `;
+  // Если ничего не найдено — очистим и покажем сообщение
+  if (sortedNews.length === 0) {
+    newsNewList.innerHTML = '';
+    newsList.innerHTML = '';
+    loadMoreBtn.style.display = 'none';
+    const no = document.createElement('li');
+    no.className = 'no-results';
+    no.textContent = 'Ничего не найдено';
+    // небольшая стилизация можно прописать в CSS для .no-results
+    newsList.appendChild(no);
+    return;
+  }
 
-        // добавляем возможность открыть картинку в новом окне при клике
-        const img = li.querySelector('img');
-        if (img) {
-            img.addEventListener('click', () => window.open(item.image, '_blank'));
-        }
+  // Если это новый рендер (visibleCount === 0), очищаем блоки
+  if (visibleCount === 0) {
+    newsNewList.innerHTML = '';
+    newsList.innerHTML = '';
+  }
 
-        newsList.appendChild(li);
-    });
+  // Если ещё не показана первая новость — показываем её в newsNewList
+  if (visibleCount === 0 && sortedNews.length > 0) {
+    const first = sortedNews[0];
+    const liFirst = createNewsItem(first);
+    newsNewList.appendChild(liFirst);
+    animateShow(liFirst);
+    visibleCount = 1;
+  }
+
+  // Берём следующий блок новостей после уже показанных
+  const nextNews = sortedNews.slice(visibleCount, visibleCount + step);
+  nextNews.forEach(item => {
+    const li = createNewsItem(item);
+    newsList.appendChild(li);
+    animateShow(li);
+  });
+
+  visibleCount += nextNews.length;
+
+  // Управление кнопкой
+  if (visibleCount >= sortedNews.length) {
+    loadMoreBtn.style.display = 'none';
+  } else {
+    loadMoreBtn.style.display = 'block';
+  }
+}
+
+// --- Подключаем пагинацию и поиск ---
+const loadMoreBtn = document.getElementById('load-more');
+if (loadMoreBtn) {
+  // Вешаем обработчик единожды
+  loadMoreBtn.addEventListener('click', renderNews);
+}
+
+// Поиск: кнопка и инпут
+const searchInput = document.querySelector('.search input');
+const searchBtn = document.querySelector('.search button');
+
+let searchDebounce = null;
+if (searchInput) {
+  // поиск по Enter
+  searchInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      currentQuery = searchInput.value.trim();
+      visibleCount = 0;
+      renderNews();
+    }
+  });
+
+  // debounce для live-поиска при вводе
+  searchInput.addEventListener('input', () => {
+    clearTimeout(searchDebounce);
+    searchDebounce = setTimeout(() => {
+      currentQuery = searchInput.value.trim();
+      visibleCount = 0;
+      renderNews();
+    }, 250);
+  });
+}
+
+if (searchBtn) {
+  searchBtn.addEventListener('click', () => {
+    currentQuery = searchInput ? searchInput.value.trim() : '';
+    visibleCount = 0;
+    renderNews();
+  });
 }
 
 document.addEventListener('DOMContentLoaded', renderNews);
 
+document.getElementById('load-more').addEventListener('click', renderNews);
 
 function initAds() {
     if (!ads || ads.length === 0) return;
@@ -95,26 +261,26 @@ function initAds() {
     const adImage = document.getElementById("ad-image");
     const adLink = document.getElementById("ad-link");
 
-    // генерируем случайный стартовый индекс
     let currentIndex = Math.floor(Math.random() * ads.length);
 
     function changeAd() {
         const ad = ads[currentIndex];
         if (!ad) return;
 
+        adImage.src = ad.image;
+        adLink.href = ad.url;
         adImage.style.opacity = 0;
-
         setTimeout(() => {
             adImage.src = ad.image;
             adLink.href = ad.url;
             adImage.style.opacity = 1;
         }, 500);
 
-        // переключаем по кругу
         currentIndex = (currentIndex + 1) % ads.length;
     }
 
-    changeAd(); // первая загрузка
-    setInterval(changeAd, 600000); // каждые 10 минут
+    changeAd(); 
+    setInterval(changeAd, 600000);
 }
 initAds();
+

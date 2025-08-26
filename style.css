@@ -153,12 +153,32 @@ img {
     font-size: 16px;
 }
 
-.sources-list {
-    list-style: none;
+.source-chip {
+    background-color: #eef5ff;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    color: #0066cc;
+    cursor: pointer;
+    margin: 3px;
+    display: inline-block;
+    user-select: none;
+    border: 1px solid transparent;
+    transition: all 0.2s;
 }
-
-.sources-list li {
-    margin-bottom: 8px;
+.source-chip:hover {
+    background-color: #d9ebff;
+}
+.source-chip.active {
+    background-color: #0066cc;
+    color: white;
+    border: 1px solid #004a99;
+}
+.sources-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-bottom: 10px;
 }
 
 .chip-list {
@@ -174,6 +194,24 @@ img {
     border-radius: 20px;
     font-size: 12px;
     color: #0066cc;
+    cursor: pointer;
+    margin: 3px;
+    display: inline-block;
+    user-select: none;
+    border: 1px solid transparent;
+    transition: all 0.2s;
+}
+.chip:hover {
+    background-color: #d9ebff;
+}
+.chip.active {
+    background-color: #0066cc;
+    color: white;
+    border: 1px solid #004a99;
+}
+.news-item {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
 }
 
 .checkbox-option {
@@ -209,6 +247,27 @@ img {
     border-bottom: 1px solid #eee;
     display: flex;
     cursor: pointer;
+    overflow: hidden;
+    transition: all 0.5s ease;
+    max-height: 500px; /* примерная высота новости */
+    opacity: 1;
+}
+.news-item.hidden {
+    max-height: 0;
+    opacity: 0;
+    padding: 0;
+    border: 0;
+}
+
+.news-fulltext {
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: all 0.5s;
+}
+.news-item.open .news-fulltext {
+    max-height: 500px;
+    opacity: 1;
 }
 
 .news-item:last-child {
@@ -244,17 +303,16 @@ img {
 .news-image {
     flex: 0 0 120px;
     margin-left: 15px;
-    border-radius: 4px;
     overflow: hidden;
 }
 
 .news-image img {
     width: 100%;
+    border-radius: 4px;
     display: block;
 }
 
 .news-fulltext {
-    display: none;
     margin-top: 10px;
     font-size: 14px;
     color: #333;
@@ -314,7 +372,7 @@ img {
     height: 100%;
     object-fit: cover;
     transition: opacity 0.5s ease-in-out;
-    opacity: 1;
+    opacity: 0;
   }
 /* Правая колонка */
 .right-column {
@@ -365,7 +423,6 @@ img {
     border-bottom: none;
 }
 
-/* Футер */
 .footer {
     background-color: #1a1a1a;
     color: #fff;
@@ -445,4 +502,62 @@ img {
     border-top: 1px solid #333;
     font-size: 12px;
     color: #999;
+}
+
+.image-modal {
+  position: fixed;
+  inset: 0;
+  display: none;                 /* скрыто по умолчанию */
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.image-modal.is-open {
+  display: flex;                 /* показываем при открытии */
+}
+
+.image-modal__overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.8);
+}
+
+.image-modal__dialog {
+  position: relative;
+  margin: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 90vw;
+  max-height: 90vh;
+}
+
+#modal-image {
+  max-width: 100%;
+  max-height: 100%;
+  border-radius: 12px;
+  box-shadow: 0 0 20px rgba(255,255,255,0.4);
+  animation: zoomIn 0.22s ease;
+}
+
+.image-modal__close {
+  position: absolute;
+  top: -12px;
+  right: -12px;
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 999px;
+  background: rgba(0,0,0,0.65);
+  color: #fff;
+  font-size: 22px;
+  line-height: 36px;
+  cursor: pointer;
+}
+
+@keyframes zoomIn {
+  from { transform: scale(0.85); opacity: 0; }
+  to   { transform: scale(1);    opacity: 1; }
 }
