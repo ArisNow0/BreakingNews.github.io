@@ -74,11 +74,9 @@ document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') closeModal();
 });
 
-let visibleCount = 0; // Сколько новостей уже показано
-const step = 5;       // Сколько новостей показывать за раз
-let currentQuery = ''; // Текущий поисковый запрос
-
-// --- Вспомогательные: парсер даты и сортировка/фильтрация ---
+let visibleCount = 0; 
+const step = 5;      
+let currentQuery = ''; 
 function parseDateFromString(str) {
   if (!str) return new Date(0);
   const [time, date] = str.split(' ');
@@ -89,7 +87,6 @@ function parseDateFromString(str) {
 
 function getFilteredSortedNews() {
   const q = currentQuery.trim().toLowerCase();
-  // фильтруем по полям (если q пустой — фильтр пропускает всё)
   const filtered = newsData.filter(item => {
     if (!q) return true;
     const hay = (
@@ -101,11 +98,9 @@ function getFilteredSortedNews() {
     return hay.includes(q);
   });
 
-  // сортируем по дате (новее сверху)
   return filtered.slice().sort((a, b) => parseDateFromString(b.time) - parseDateFromString(a.time));
 }
 
-// --- Создание DOM-элемента новости (как раньше) ---
 function createNewsItem(item) {
   const li = document.createElement('li');
   li.className = 'news-item';
@@ -132,12 +127,10 @@ function createNewsItem(item) {
   return li;
 }
 
-// --- Анимация появления (как у тебя) ---
 function animateShow(li) {
   li.style.overflow = 'hidden';
   li.style.maxHeight = '0px';
   li.style.opacity = '0';
-  // следующий кадр — анимируем до scrollHeight
   requestAnimationFrame(() => {
     const target = li.scrollHeight;
     li.style.transition = 'max-height 0.5s ease, opacity 0.45s ease, padding 0.45s ease';
@@ -156,7 +149,6 @@ function animateShow(li) {
   li.addEventListener('transitionend', onTransitionEnd);
 }
 
-// --- Основная функция рендера (с учётом поиска) ---
 function renderNews() {
   const newsList = document.getElementById('news-list');
   const newsNewList = document.getElementById('news-new-list');
@@ -164,7 +156,6 @@ function renderNews() {
 
   const sortedNews = getFilteredSortedNews();
 
-  // Если ничего не найдено — очистим и покажем сообщение
   if (sortedNews.length === 0) {
     newsNewList.innerHTML = '';
     newsList.innerHTML = '';
@@ -172,18 +163,15 @@ function renderNews() {
     const no = document.createElement('li');
     no.className = 'no-results';
     no.textContent = 'Ничего не найдено';
-    // небольшая стилизация можно прописать в CSS для .no-results
     newsList.appendChild(no);
     return;
   }
 
-  // Если это новый рендер (visibleCount === 0), очищаем блоки
   if (visibleCount === 0) {
     newsNewList.innerHTML = '';
     newsList.innerHTML = '';
   }
 
-  // Если ещё не показана первая новость — показываем её в newsNewList
   if (visibleCount === 0 && sortedNews.length > 0) {
     const first = sortedNews[0];
     const liFirst = createNewsItem(first);
@@ -192,7 +180,6 @@ function renderNews() {
     visibleCount = 1;
   }
 
-  // Берём следующий блок новостей после уже показанных
   const nextNews = sortedNews.slice(visibleCount, visibleCount + step);
   nextNews.forEach(item => {
     const li = createNewsItem(item);
@@ -202,7 +189,6 @@ function renderNews() {
 
   visibleCount += nextNews.length;
 
-  // Управление кнопкой
   if (visibleCount >= sortedNews.length) {
     loadMoreBtn.style.display = 'none';
   } else {
@@ -210,20 +196,16 @@ function renderNews() {
   }
 }
 
-// --- Подключаем пагинацию и поиск ---
 const loadMoreBtn = document.getElementById('load-more');
 if (loadMoreBtn) {
-  // Вешаем обработчик единожды
   loadMoreBtn.addEventListener('click', renderNews);
 }
 
-// Поиск: кнопка и инпут
 const searchInput = document.querySelector('.search input');
 const searchBtn = document.querySelector('.search button');
 
 let searchDebounce = null;
 if (searchInput) {
-  // поиск по Enter
   searchInput.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') {
       currentQuery = searchInput.value.trim();
@@ -232,7 +214,6 @@ if (searchInput) {
     }
   });
 
-  // debounce для live-поиска при вводе
   searchInput.addEventListener('input', () => {
     clearTimeout(searchDebounce);
     searchDebounce = setTimeout(() => {

@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <title>Новостной портал</title>
+
     <link rel="stylesheet" href="style.css">
- 
+
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-65NJ4MW79X"></script>
     <script>
@@ -20,11 +21,13 @@
         <div class="container">
             <div class="header-top">
                 <div class="logo">
-                    <img src="image/logo_full.png"
-                         alt="Логотип">
+                    <picture>
+                        <source srcset="image/logo.png" media="(max-width: 768px)">
+                        <img src="image/logo_full.png" alt="Логотип">
+                    </picture>
                 </div>
                 <div class="search">
-                    <input type="text" placeholder="Поиск по сайту...">
+                    <input type="text" placeholder="Поиск по сайту..." aria-label="Поиск">
                     <button>🔍</button>
                 </div>
                 <div class="header-widgets">
@@ -34,18 +37,20 @@
             </div>
         </div>
     </header>
-
+<button class="left-toggle" aria-controls="leftColumn" aria-expanded="false">Фильтры</button>
+<div class="left-backdrop" tabindex="-1" aria-hidden="true"></div>
     <main class="container main-content">
         <aside class="left-column">
-<div class="filter-block">
-    <div class="filter-title">Источники новостей</div>
-    <div class="sources-list">
-        <span class="source-chip active">Все источники</span>
-        <span class="source-chip">Discord</span>
-        <span class="source-chip">Ukraine News</span>
-        <span class="source-chip">Новости Мира</span>
-    </div>
-</div>
+            <div class="filter-block">
+                <div class="filter-title">Источники новостей</div>
+                <div class="sources-list">
+                    <span class="source-chip active">Все источники</span>
+                    <span class="source-chip">Discord</span>
+                    <span class="source-chip">Ukraine News</span>
+                    <span class="source-chip">Новости Мира</span>
+                </div>
+            </div>
+
             <div class="filter-block">
                 <div class="filter-title">Темы</div>
                 <div class="chip-list">
@@ -62,13 +67,10 @@
 
         <section class="center-column">
             <div class="main-news" id="news-new-list">
-                <h2 class="section-title">Главное сейчас</h2>
-                
             </div>
             <div class="main-news">
                 <h2 class="section-title">Последние новости</h2>
-                <ul class="news-list" id="news-list"> 
-                </ul>
+                <ul class="news-list" id="news-list"></ul>
                 <div class="pagination">
                     <button class="load-more" id="load-more">Показать ещё</button>
                 </div>
@@ -77,12 +79,9 @@
 
         <aside class="right-column">
             <div class="widget">
-                <div class="ad-block">
-  <a id="ad-link" href="#" target="_blank">
-    <img  id="ad-image" src="https://media.discordapp.net/attachments/928369782024208454/1408871195880718458/kim_chan_in.png?ex=68ab510c&is=68a9ff8c&hm=65ce4da8e78d4b10f234708cecc76f6b9b458160f296fdd00755dfc6a62bd790&=&format=webp&quality=lossless&width=1489&height=838" alt="Реклама">
-  </a>
-</div>
+<div class="ad-block"> <a id="ad-link" href="#" target="_blank"> <img id="ad-image" src="https://media.discordapp.net/attachments/928369782024208454/1408871195880718458/kim_chan_in.png?ex=68ab510c&is=68a9ff8c&hm=65ce4da8e78d4b10f234708cecc76f6b9b458160f296fdd00755dfc6a62bd790&=&format=webp&quality=lossless&width=1489&height=838" alt="Реклама"> </a> </div>
             </div>
+
             <div class="widget">
                 <h3 class="widget-title">Погода</h3>
                 <ul class="weather-info">
@@ -91,6 +90,7 @@
                     <li id="Odessa">Одесса: +99°C</li>
                 </ul>
             </div>
+
             <div class="widget">
                 <h3 class="widget-title">Курсы валют</h3>
                 <ul class="currency-info">
@@ -107,7 +107,7 @@
                 <div class="footer-section">
                     <h3 class="footer-title">О нас</h3>
                     <ul class="footer-links">
-                        <li><a href="#">Создатель сайта</a></li>
+                        <li><a href="https://arisnow0.github.io/">Создатель сайта</a></li>
                         <li><a href="https://t.me/ArisNow">По рекламе на сайте</a></li>
                         <li><a href="https://discord.com/invite/vUvEpwZss5">Крутой серв</a></li>
                     </ul>
@@ -127,18 +127,15 @@
         </div>
     </footer>
 
+    <div id="image-modal" class="image-modal" aria-hidden="true">
+        <div class="image-modal__overlay" tabindex="-1"></div>
+        <figure class="image-modal__dialog" role="dialog" aria-modal="true" aria-label="Просмотр изображения">
+            <button class="image-modal__close" aria-label="Закрыть">×</button>
+            <img id="modal-image" src="" alt="Увеличенное изображение">
+        </figure>
+    </div>
 
-<div id="image-modal" class="image-modal" aria-hidden="true">
-  <div class="image-modal__overlay" tabindex="-1"></div>
-
-  <figure class="image-modal__dialog" role="dialog" aria-modal="true" aria-label="Просмотр изображения">
-    <button class="image-modal__close" aria-label="Закрыть">×</button>
-    <img id="modal-image" src="" alt="Увеличенное изображение">
-  </figure>
-</div>
-
-    <script src="news.js" type="module"></script>
+    <script type="module" src="news.js"></script>
     <script src="script.js"></script>
-
 </body>
 </html>

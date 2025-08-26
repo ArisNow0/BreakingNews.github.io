@@ -137,7 +137,6 @@ newsList.addEventListener('click', e => {
     const item = e.target.closest('.news-item');
     if (!item) return;
 
-    // Клик только по текстовой части
     if (!e.target.closest('.news-image')) {
         item.classList.toggle('open');
     }
@@ -148,7 +147,6 @@ newsNewList.addEventListener('click', e => {
     const item = e.target.closest('.news-item');
     if (!item) return;
 
-    // Клик только по текстовой части
     if (!e.target.closest('.news-image')) {
         item.classList.toggle('open');
     }
@@ -159,21 +157,21 @@ document.addEventListener('DOMContentLoaded', () => {
     const chips = document.querySelectorAll('.chip');
     const sourceChips = document.querySelectorAll('.source-chip');
 
-    // Объединяем обработку кликов для всех фильтров
+
     function setupChips(list, isSource=false) {
         list.forEach(chip => {
             chip.addEventListener('click', () => {
                 if (isSource && chip.textContent === "Все источники") {
-                    // Деактивируем все остальные
+
                     list.forEach(c => c.classList.remove('active'));
                     chip.classList.add('active');
                 } else if (isSource) {
                     chip.classList.toggle('active');
-                    // Снимаем "Все источники", если выбран хотя бы один
+   
                     const allChip = Array.from(list).find(c => c.textContent === "Все источники");
                     if (allChip) allChip.classList.remove('active');
                 } else {
-                    // Для темы просто переключаем активность
+      
                     chip.classList.toggle('active');
                 }
                 applyFilter();
@@ -209,12 +207,49 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Поддержка динамически добавляемых новостей
+  
     const newsList = document.querySelector('.news-list');
     if (newsList) {
         const observer = new MutationObserver(() => applyFilter());
         observer.observe(newsList, { childList: true });
     }
 
-    applyFilter(); // первый запуск
+    applyFilter();
+});
+
+
+document.addEventListener('DOMContentLoaded', function () {
+  const btn = document.querySelector('.left-toggle');
+  const panel = document.querySelector('.left-column');
+  const backdrop = document.querySelector('.left-backdrop');
+
+  function openPanel() {
+    panel.classList.add('open');
+    backdrop.classList.add('open');
+    btn.setAttribute('aria-expanded', 'true');
+    document.documentElement.style.overflow = 'hidden';
+  }
+
+  function closePanel() {
+    panel.classList.remove('open');
+    backdrop.classList.remove('open');
+    btn.setAttribute('aria-expanded', 'false');
+    document.documentElement.style.overflow = '';
+  }
+
+  btn.addEventListener('click', () => {
+    if (panel.classList.contains('open')) {
+      closePanel();
+    } else {
+      openPanel();
+    }
+  });
+
+  backdrop.addEventListener('click', closePanel);
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && panel.classList.contains('open')) {
+      closePanel();
+    }
+  });
 });
